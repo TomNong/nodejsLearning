@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var Product = require('../models/product');
+var csrf = require('csurf');
+var csrfProtection = csrf();
+router.use(csrfProtection);
+// all url traffic go through the router should be protected by the csrfToken
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var products = Product.find();
@@ -15,5 +19,7 @@ router.get('/', function(req, res, next) {
     res.render('shop/index', { title: 'Shopping cart', products: productChunks});
   });
 });
-
+router.get('/user/signup', function(req, res, next){
+  res.render('user/signup', {csrfToken: req.csrfToken()})
+});
 module.exports = router;
